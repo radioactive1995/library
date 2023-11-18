@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\library.application\library.application.csproj" />
+    <ProjectReference Include="..\library.contracts\library.contracts.csproj" />
+    <ProjectReference Include="..\library.domain\library.domain.csproj" />
+  </ItemGroup>
+
+</Project>
