@@ -2,4 +2,4 @@
 
 namespace library.domain.Base;
 
-public abstract record DomainEvent(Guid Id) : INotification;
+public abstract record DomainEvent(string Id) : INotification;

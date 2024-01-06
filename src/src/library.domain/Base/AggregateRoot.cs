@@ -1,13 +1,14 @@
 ﻿namespace library.domain.Base;
-public abstract class AggregateRoot<TEntityId> : Entity<TEntityId> where TEntityId : class
+public abstract class AggregateRoot<TEntityId> : Entity<TEntityId>, IAggregateRoot where TEntityId : class
 {
-    public readonly List<DomainEvent> _domainEvents
+    private readonly List<DomainEvent> _domainEvents
         = new List<DomainEvent>();
 
+    public IReadOnlyList<DomainEvent> FetchAllDomainEvents() => _domainEvents;
+    public void FlushAllDomainEvents() => _domainEvents.Clear();
 
-    protected void RaiseDomainEvent(DomainEvent @event)
+    public void RaiseDomainEvent(DomainEvent @event)
     {
         _domainEvents.Add(@event);
     }
-
 }

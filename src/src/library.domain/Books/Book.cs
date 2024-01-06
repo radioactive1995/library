@@ -35,6 +35,7 @@ public class Book : AggregateRoot<BookId>
         }
 
         var book = new Book(id, title, author, isbn, publishedDate, status);
+        book.RaiseDomainEvent(new BookCreatedDomainEvent(Id: book.Id.Value));
 
         return book;
     }

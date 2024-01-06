@@ -17,11 +17,13 @@ public class AddBookCommandHandler : IRequestHandler<AddBookCommand, ErrorOr<Add
     public AddBookCommandHandler(
         IBookCommandRepository bookCommandRepository,
         IBookQueryRepository bookQueryRepository,
+        IPublisher publisher,
         IUnitOfWork unitOfWork)
     {
         _bookCommandRepository = bookCommandRepository;
         _bookQueryRepository = bookQueryRepository;
         _unitOfWork = unitOfWork;
+        _publisher = publisher;
     }
     public async Task<ErrorOr<AddBookCommandResponse>> Handle(AddBookCommand command, CancellationToken cancellationToken)
     {

@@ -4,14 +4,17 @@ using library.application.Common.Interfaces.Persistance.Books;
 using library.application.Common.Interfaces.Persistance.Users;
 using library.infrastructure.Persistance.Common;
 using library.infrastructure.Persistance.Context;
+using library.infrastructure.Persistance.Context.Interceptors;
 using library.infrastructure.Persistance.Repositories;
 using library.infrastructure.Persistance.Repositories.Books;
 using library.infrastructure.Persistance.Repositories.Users;
 using library.infrastructure.Providers.Authentication;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace library.infrastructure;
 
@@ -28,11 +31,13 @@ public static class DependencyInjection
         builder.Services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
         builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(nameof(DatabaseConfiguration)));
         builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection(nameof(JwtConfiguration)));
-        builder.Services.AddDbContext<LibraryDbContext>(options =>
+        builder.Services.AddDbContext<LibraryDbContext>((sp, options) =>
         {
             options.UseSqlServer(builder.Configuration.GetSection(nameof(DatabaseConfiguration)).Get<DatabaseConfiguration>()?.ConnectionString
-                ?? throw new ArgumentNullException(nameof(DatabaseConfiguration.ConnectionString)));
+                ?? throw new ArgumentNullException(nameof(DatabaseConfiguration.ConnectionString)))
+            .AddInterceptors(new EventDomainInterceptor(sp.GetRequiredService<IPublisher>()));
         });
+
         return builder;
     }
 }
