@@ -1,4 +1,5 @@
-﻿using library.application.Users.Commands.LoginUser;
+﻿using library.application.Users.Commands.BorrowBook;
+using library.application.Users.Commands.LoginUser;
 using library.application.Users.Commands.RegisterUser;
 using library.contracts.Rest.Users;
 using library.presentation.Endpoints.Base;
@@ -33,5 +34,15 @@ public class UsersModule : Module, IModule
                 result => Results.Created(result.userId, result),
                 errors => Problem(errors));
         });
+
+        group.MapPatch("/book", async (BorrowBookRequest request, ISender sender, HttpContext httpContext) =>
+        {
+            var command = new BorrowBookCommand(httpContext.User, request.BookId);
+            var result = await sender.Send(command);
+
+            return result.Match(
+                result => Results.NoContent(),
+                errors => Problem(errors));
+        }).RequireAuthorization();
     }
 }

@@ -14,15 +14,23 @@ public class EventDomainInterceptor : SaveChangesInterceptor
     {
         if (eventData.Context is not null)
         {
-            var domainEvents = eventData.Context.ChangeTracker
-            .Entries<IAggregateRoot>()
-            .SelectMany(entities => entities.Entity.FetchAllDomainEvents());
+            var aggregateRoots = eventData.Context.ChangeTracker
+            .Entries<IAggregateRoot>().Select(entity => entity.Entity).ToList();
 
+            List<DomainEvent> domainEvents = new List<DomainEvent>();
+            
+            foreach(var root in aggregateRoots)
+            {
+                domainEvents.AddRange(root.FetchAllDomainEvents());
+                root.FlushAllDomainEvents();
+            }
+            
             foreach (var domainEvent in domainEvents)
             {
                 await _publisher.Publish(domainEvent, cancellationToken);
             }
         }
+
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }

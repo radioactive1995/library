@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\library.application\library.application.csproj" />
     <ProjectReference Include="..\library.contracts\library.contracts.csproj" />
     <ProjectReference Include="..\library.domain\library.domain.csproj" />

@@ -3,7 +3,7 @@
 namespace library.domain.Books.Events;
 public record BookCreatedDomainEvent : DomainEvent
 {
-    public BookCreatedDomainEvent(string Id) : base(Id)
+    public BookCreatedDomainEvent(string BookId) : base()
     {
     }
 }

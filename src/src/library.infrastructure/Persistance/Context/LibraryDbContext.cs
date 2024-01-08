@@ -4,6 +4,7 @@ using library.domain.Users;
 using library.domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Text.Json;
 
 namespace library.infrastructure.Persistance.Context;
 
@@ -71,6 +72,11 @@ public class LibraryDbContext : DbContext
                 navigationBuilder.Property(email => email.Value).HasColumnName("Email");
                 navigationBuilder.Property(email => email.IsEmailConfirmed).HasColumnName("IsEmailConfirmed");
             });
+
+            entity.Property(e => e.BookIds)
+              .HasConversion(
+                  to => JsonSerializer.Serialize(to, new JsonSerializerOptions(JsonSerializerDefaults.General)),
+                  from => JsonSerializer.Deserialize<List<string>>(from, new JsonSerializerOptions(JsonSerializerDefaults.General)));
         });
     }
 }

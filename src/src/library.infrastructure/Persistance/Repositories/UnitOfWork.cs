@@ -4,7 +4,7 @@ using library.infrastructure.Persistance.Context;
 namespace library.infrastructure.Persistance.Repositories;
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly LibraryDbContext _db;
+    public readonly LibraryDbContext _db;
 
     public UnitOfWork(LibraryDbContext db)
     {

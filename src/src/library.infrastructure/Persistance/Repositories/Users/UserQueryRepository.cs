@@ -31,6 +31,15 @@ internal class UserQueryRepository : IUserQueryRepository
             commandType: CommandType.Text);
     }
 
+    public async Task<User?> GetUserByIdAsync(string userId)
+    {
+        using IDbConnection connection = new SqlConnection(_options.Value.ConnectionString);
+        return await connection.QueryFirstOrDefaultAsync<User>(
+            sql: "SELECT * FROM UserId WHERE UserName = @Id",
+            param: new { Id = userId },
+            commandType: CommandType.Text);
+    }
+
     public async Task<UserCredentialsDto?> GetUserCredentialsByUserNameAsync(string username)
     {
         using IDbConnection connection = new SqlConnection(_options.Value.ConnectionString);

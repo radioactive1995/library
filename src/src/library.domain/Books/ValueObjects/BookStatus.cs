@@ -15,6 +15,7 @@ public record BookStatus
     private BookStatus(int status, string borrowedUserId)
     {
         StatusValue = (NummericValue)status;
+        BorrowedUserId = borrowedUserId;
     }
 
     private BookStatus() {}
