@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
 namespace library.infrastructure;
@@ -27,6 +26,7 @@ public static class DependencyInjection
     {
         builder.Services.AddScoped<IBookCommandRepository, BookCommandRepository>();
         builder.Services.AddScoped<IBookQueryRepository, BookQueryRepository>();
+        builder.Services.Decorate<IBookQueryRepository, CacheBookQueryRepository>();
         builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
         builder.Services.AddScoped<IUserQueryRepository, UserQueryRepository>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -39,6 +39,12 @@ public static class DependencyInjection
             options.UseSqlServer(builder.Configuration.GetSection(nameof(DatabaseConfiguration)).Get<DatabaseConfiguration>()?.ConnectionString
                 ?? throw new ArgumentNullException(nameof(DatabaseConfiguration.ConnectionString)))
             .AddInterceptors(new EventDomainInterceptor(sp.GetRequiredService<IPublisher>()));
+        });
+
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = "localhost:6379";
+            options.InstanceName = "library-redis";
         });
 
         var jwtConfiguration = new JwtConfiguration()
